@@ -114,7 +114,8 @@
                 // アニメーションを再生するイベントを設定する
                 renderer.setAnimationLoop(() => {
                     update();
-
+        　　　　// 照明の位置をカメラに合わせる
+        　　　　　　directionalLight.position.copy(camera.position);
                     renderer.render(scene, camera);
                 });
             },
@@ -123,8 +124,7 @@
                 console.error(error);
             }
         );
-        // 照明の位置をカメラに合わせる
-        directionalLight.position.copy(camera.position);
+
               
     </script>
   </body>
