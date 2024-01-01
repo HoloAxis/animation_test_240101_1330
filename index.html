@@ -105,17 +105,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
               
                 // アニメーションを更新する関数を定義する
+
+              /*
                 function update() {
                     if (mixer) {
                         mixer.update(clock.getDelta());
-                    }
+                    }*/
                 }
 
                 // アニメーションを再生するイベントを設定する
                 renderer.setAnimationLoop(() => {
                     update();
         　　　　// 照明の位置をカメラに合わせる
-  directionalLight.position.copy(camera.position);
+                    directionalLight.position.copy(camera.position);
                     renderer.render(scene, camera);
                 });
             },
