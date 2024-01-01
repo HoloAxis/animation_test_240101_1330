@@ -103,21 +103,6 @@
 
                 scene.add(gltf.scene);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-　　　/*       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        loader.load(
-            "three_240101_1600.gltf",
-            function (gltf_2) {
-                // アニメーションを読み込む
-                let mixer = new THREE.AnimationMixer(gltf_2.scene);
-                gltf_2.animations.forEach((clip) => {
-                    mixer.clipAction(clip).play();
-                });
-
-                scene.add(gltf_2.scene);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   */
-
-
-
               
                 // アニメーションを更新する関数を定義する
                 function update() {
@@ -129,8 +114,7 @@
                 // アニメーションを再生するイベントを設定する
                 renderer.setAnimationLoop(() => {
                     update();
-                    // 照明の位置をカメラに合わせる
-                    directionalLight.position.copy(camera.position);
+
                     renderer.render(scene, camera);
                 });
             },
@@ -139,6 +123,9 @@
                 console.error(error);
             }
         );
+        // 照明の位置をカメラに合わせる
+        directionalLight.position.copy(camera.position);
+              
     </script>
   </body>
 </html>
