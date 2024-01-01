@@ -1,105 +1,101 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>GLTFモデルの表示</title>
+  <head>
+    <meta charset="utf-8">
+    <title>three.jsでGLBファイルを表示する</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
+      body {
+        margin: 0;
+        background-color: rgb(118, 120, 139);
+      }
+      canvas {
+        display: block;
+      }
     </style>
-</head>
-<body>
-    <script src="https://cdn.rawgit.com/mrdoob/three.js/r129/build/three.js"></script>
-    <script src="https://cdn.rawgit.com/mrdoob/three.js/r129/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.rawgit.com/mrdoob/three.js/r129/examples/js/controls/OrbitControls.js"></script>
-
-    <script>
-        // ウェブページの読み込みが完了したら実行
-        window.addEventListener('DOMContentLoaded', init);
-
-        function init() {
-            // レンダラーの作成
-            const renderer = new THREE.WebGLRenderer();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-
-            // シーンの作成
-            const scene = new THREE.Scene();
-
-            // カメラの作成
-            const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.001, 100);//near, far
-            camera.position.z = 4;
-            camera.position.y = 1;
-            camera.near = 0.1;
-            camera.far = 1000000;
-
-            // ライトの作成
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-            directionalLight.position.set(0, 1, 1);
-            scene.add(directionalLight);
-            
-            // 環境光源を作成
-            // new THREE.AmbientLight(色, 光の強さ)
-            const AmbientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
-            scene.add(AmbientLight);
-
-            // GLTFLoaderのインスタンスを作成
-            const loader = new THREE.GLTFLoader();
-
-            // モデルの読み込み
-
-            //髪
-            loader.load(
-                'hair.gltf',  // モデルファイルのパス
-                function (gltf1) {
-                    const model1 = gltf1.scene;
-                    scene.add(model1);
-                    //model1.scale.set(5,5,5); 
-                },
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                undefined,
-                function (error) {
-                    console.error(error);
-                }
-            //model1.scale.set(5,5,5);  
-            );
-
-            // カメラコントロールの作成
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-            // テクスチャの読み込みと背景への設定
-            const textureLoader = new THREE.TextureLoader();
-            textureLoader.load(
-                'gradation.jpg',  // 背景画像のパス
-                //'thin.jpg',  // 背景画像のパス
-                function (texture) {
-                    scene.background = texture;
-                },
-                undefined,
-                function (error) {
-                    console.error(error);
-                }
-            );
-
-            // アニメーションのループ
-            function animate() {
-                requestAnimationFrame(animate);
-
-                // カメラコントロールの更新
-                controls.update();
-
-                // 照明の位置をカメラに合わせる
-                directionalLight.position.copy(camera.position);
-
-                renderer.render(scene, camera);
+        <script type="importmap">
+          {
+            "imports": {
+              "three": "https://unpkg.com/three@v0.151.3/build/three.module.js",
+              "three/addons/": "https://unpkg.com/three@v0.151.3/examples/jsm/"
             }
-            animate();
-        }
+          }
+        </script>
+  </head>
+  <body>
+
+    <script type="module">
+        // 1. Three.jsライブラリの読み込み
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+
+        // 2. シーンを作成する
+        const scene = new THREE.Scene();
+
+        // 2. カメラを作成する
+        const camera = new THREE.PerspectiveCamera(
+            75, // 視野角
+            window.innerWidth / window.innerHeight, // アスペクト比
+            0.001, // ニアクリップ面
+            1000 // ファークリップ面
+        );
+        camera.position.z = 5; // カメラの位置を設定する
+
+        // 4. レンダラーを作成する
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0xffffff, 0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.zoomSpeed = 0.5;
+        controls.update(); // 初期化時に一度だけ呼び出す
+
+        // AmbientLightを追加する
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+        scene.add(ambientLight);
+
+        // 5. GLTFLoaderを作成する
+        const loader = new GLTFLoader();
+        
+        const dracoLoader = new DRACOLoader(); // DRACOLoaderのインスタンスを作成
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.1/');
+        loader.setDRACOLoader(dracoLoader); // GLTFLoaderにDRACOLoaderのインスタンスを提供
+
+        // 6. clockを作成する
+        const clock = new THREE.Clock();
+
+        // 7. 3Dモデルのロード＆描画
+        loader.load(
+            "three_240101_0955.gltf",
+            function (gltf) {
+                // アニメーションを読み込む
+                let mixer = new THREE.AnimationMixer(gltf.scene);
+                gltf.animations.forEach((clip) => {
+                    mixer.clipAction(clip).play();
+                });
+
+                scene.add(gltf.scene);
+
+                // アニメーションを更新する関数を定義する
+                function update() {
+                    if (mixer) {
+                        mixer.update(clock.getDelta());
+                    }
+                }
+
+                // アニメーションを再生するイベントを設定する
+                renderer.setAnimationLoop(() => {
+                    update();
+                    renderer.render(scene, camera);
+                });
+            },
+            undefined,
+            function (error) {
+                console.error(error);
+            }
+        );
     </script>
-</body>
+  </body>
 </html>
