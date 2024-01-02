@@ -1,56 +1,103 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GLTFモデルの表示</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r129/build/three.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r129/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r129/examples/js/controls/OrbitControls.js"></script>
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+    <script>
+        // ウェブページの読み込みが完了したら実行
+        window.addEventListener('DOMContentLoaded', init);
 
-const loader = new GLTFLoader();
-const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.1/');
-loader.setDRACOLoader(dracoLoader);
+        function init() {
+            // レンダラーの作成
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
 
-const clock = new THREE.Clock();
+            // シーンの作成
+            const scene = new THREE.Scene();
 
-let mixer1, mixer2;
+            // カメラの作成
+            const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.001, 100);//near, far
+            camera.position.z = 4;
+            camera.position.y = 1;
+            camera.near = 0.1;
+            camera.far = 1000000;
 
-// Load the first model
-loader.load('model1.gltf', function (gltf1) {
-    mixer1 = new THREE.AnimationMixer(gltf1.scene);
-    gltf1.animations.forEach((clip) => {
-        mixer1.clipAction(clip).play();
-    });
-    scene.add(gltf1.scene);
-});
+            // ライトの作成
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+            directionalLight.position.set(0, 1, 1);
+            scene.add(directionalLight);
+            
+            // 環境光源を作成
+            // new THREE.AmbientLight(色, 光の強さ)
+            const AmbientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
+            scene.add(AmbientLight);
 
-// Load the second model
-loader.load('model2.gltf', function (gltf2) {
-    mixer2 = new THREE.AnimationMixer(gltf2.scene);
-    gltf2.animations.forEach((clip) => {
-        mixer2.clipAction(clip).play();
-    });
-    scene.add(gltf2.scene);
-});
+            // GLTFLoaderのインスタンスを作成
+            const loader = new THREE.GLTFLoader();
 
-camera.position.z = 5;
+            // モデルの読み込み
 
-function animate() {
-    requestAnimationFrame(animate);
+            //髪           //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            loader.load(
+                'three_240101_0955.gltf,  // モデルファイルのパス
+                function (gltf1) {
+                    const model1 = gltf1.scene;
+                    scene.add(model1);
+                    //model1.scale.set(5,5,5); 
+                },
+                undefined,
+                function (error) {
+                    console.error(error);
+                }
+            //model1.scale.set(5,5,5);  
+            );
 
-    const delta = clock.getDelta();
 
-    if (mixer1) {
-        mixer1.update(delta);
-    }
+        
 
-    if (mixer2) {
-        mixer2.update(delta);
-    }
+            // カメラコントロールの作成
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-    renderer.render(scene, camera);
-}
+            // テクスチャの読み込みと背景への設定
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(
+                'gradation.jpg',  // 背景画像のパス
+                //'thin.jpg',  // 背景画像のパス
+                function (texture) {
+                    scene.background = texture;
+                },
+                undefined,
+                function (error) {
+                    console.error(error);
+                }
+            );
 
-animate();
+            // アニメーションのループ
+            function animate() {
+                requestAnimationFrame(animate);
+
+                // カメラコントロールの更新
+                controls.update();
+
+                // 照明の位置をカメラに合わせる
+                directionalLight.position.copy(camera.position);
+
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
