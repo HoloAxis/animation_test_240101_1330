@@ -74,8 +74,8 @@
         // テクスチャの読み込みと背景への設定
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
-            //'gradation.jpg',  // 背景画像のパス
-            'thin.jpg',  // 背景画像のパス
+            'gradation.jpg',  // 背景画像のパス
+            //'thin.jpg',  // 背景画像のパス
             function (texture) {
                 scene.background = texture;
             },
@@ -88,44 +88,7 @@
   
         // 7. 3Dモデルのロード＆描画
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        loader.load(
-            "three_240101_0955.gltf",
-            function (gltf_2) {
-                // アニメーションを読み込む
-                let mixer_3 = new THREE.AnimationMixer(gltf_2.scene);
-                gltf_2.animations.forEach((clip) => {
-                    mixer_3.clipAction(clip).play();
-                });
-
-                scene.add(gltf_2.scene);
-
-              
-                // アニメーションを更新する関数を定義する
-
-              
-                function update() {
-                    if (mixer_3) {
-                        mixer_3.update(clock.getDelta());
-                    }
-                }
-
-                // アニメーションを再生するイベントを設定する
-                renderer.setAnimationLoop(() => {
-                    update();
-        　　　　// 照明の位置をカメラに合わせる
-                    directionalLight.position.copy(camera.position);
-                    renderer.render(scene, camera);
-                });
-            },
-            undefined,
-            function (error) {
-                console.error(error);
-            }
-       );
-
-      
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   */
+ 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         loader.load(
             "three_240101_1600.gltf",
@@ -166,7 +129,44 @@
 
       
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        loader.load(
+            "three_240101_0955.gltf",
+            function (gltf_2) {
+                // アニメーションを読み込む
+                let mixer_3 = new THREE.AnimationMixer(gltf_2.scene);
+                gltf_2.animations.forEach((clip) => {
+                    mixer_3.clipAction(clip).play();
+                });
+
+                scene.add(gltf_2.scene);
+
               
+                // アニメーションを更新する関数を定義する
+
+              
+                function update() {
+                    if (mixer_3) {
+                        mixer_3.update(clock.getDelta());
+                    }
+                }
+
+                // アニメーションを再生するイベントを設定する
+                renderer.setAnimationLoop(() => {
+                    update();
+        　　　　// 照明の位置をカメラに合わせる
+                    directionalLight.position.copy(camera.position);
+                    renderer.render(scene, camera);
+                });
+            },          
+            undefined,
+            function (error) {
+                console.error(error);
+            }
+       );
+
+      
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   */     
     </script>
   </body>
 </html>
