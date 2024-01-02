@@ -31,7 +31,7 @@
 
         const loader = new GLTFLoader();
 
-        loader.load('path/to/three_240101_1600.gltf', (gltf) => {
+        loader.load('three_240101_1600.gltf', (gltf) => {
           const model1 = gltf.scene;
           scene.add(model1);
 
@@ -40,7 +40,7 @@
           action1.play();
         });
 
-        loader.load('path/to/three_240101_0955.gltf', (gltf) => {
+        loader.load('three_240101_0955.gltf', (gltf) => {
           const model2 = gltf.scene;
           model2.position.x = -3; // Adjust the position of the second model
           scene.add(model2);
