@@ -93,9 +93,9 @@
             "three_240101_0955.gltf",
             function (gltf_2) {
                 // アニメーションを読み込む
-                let mixer = new THREE.AnimationMixer(gltf_2.scene);
+                let mixer_3 = new THREE.AnimationMixer(gltf_2.scene);
                 gltf_2.animations.forEach((clip) => {
-                    mixer.clipAction(clip).play();
+                    mixer_3.clipAction(clip).play();
                 });
 
                 scene.add(gltf_2.scene);
@@ -105,8 +105,8 @@
 
               
                 function update() {
-                    if (mixer) {
-                        mixer.update(clock.getDelta());
+                    if (mixer_3) {
+                        mixer_3.update(clock.getDelta());
                     }
                 }
 
