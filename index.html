@@ -74,8 +74,8 @@
         // テクスチャの読み込みと背景への設定
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
-            'gradation.jpg',  // 背景画像のパス
-            //'thin.jpg',  // 背景画像のパス
+            //'gradation.jpg',  // 背景画像のパス
+            'thin.jpg',  // 背景画像のパス
             function (texture) {
                 scene.background = texture;
             },
@@ -93,9 +93,9 @@
             "three_240101_0955.gltf",
             function (gltf_2) {
                 // アニメーションを読み込む
-                let mixer = new THREE.AnimationMixer(gltf_2.scene);
+                let mixer_2 = new THREE.AnimationMixer(gltf_2.scene);
                 gltf_2.animations.forEach((clip) => {
-                    mixer.clipAction(clip).play();
+                    mixer_2.clipAction(clip).play();
                 });
 
                 scene.add(gltf_2.scene);
@@ -105,8 +105,8 @@
 
               
                 function update() {
-                    if (mixer) {
-                        mixer.update(clock.getDelta());
+                    if (mixer_2) {
+                        mixer_2.update(clock.getDelta());
                     }
                 }
 
@@ -126,7 +126,7 @@
 
       
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   */
-/*  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         loader.load(
             "three_240101_1600.gltf",
             function (gltf) {
