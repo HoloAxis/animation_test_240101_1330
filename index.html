@@ -74,8 +74,8 @@
         // テクスチャの読み込みと背景への設定
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
-            'gradation.jpg',  // 背景画像のパス
-            //'thin.jpg',  // 背景画像のパス
+            //'gradation.jpg',  // 背景画像のパス
+            'thin.jpg',  // 背景画像のパス
             function (texture) {
                 scene.background = texture;
             },
@@ -143,8 +143,8 @@
 
               
                 function update() {
-                    if (mixer_2) {
-                        mixer_2.update(clock.getDelta());
+                    if (mixer) {
+                        mixer.update(clock.getDelta());
                     }
                 }
 
