@@ -132,7 +132,7 @@
             function (gltf_2) {
                 // アニメーションを読み込む
                 let mixer = new THREE.AnimationMixer(gltf_2.scene);
-                gltf.animations.forEach((clip) => {
+                gltf_2.animations.forEach((clip) => {
                     mixer.clipAction(clip).play();
                 });
 
